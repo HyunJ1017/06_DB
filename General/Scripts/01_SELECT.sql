@@ -1,5 +1,5 @@
 SELECT
-	( TO_DATE('2024-08-16 17:50','YYYY-MM-DD HH24:MI')
+	( TO_DATE('2024-08-20 17:50','YYYY-MM-DD HH24:MI')
 	- CURRENT_DATE )*24*60
 FROM DUAL;
 
@@ -92,7 +92,7 @@ SELECT SYSDATE, CURRENT_DATE,
 			SYSTIMESTAMP, CURRENT_TIMESTAMP 
 FROM DUAL;
 
-/* DUAL (DUmmy tAbLe)
+/* DUAL (DUmmytAbLe)
  * - 가짜 테이블 (임시테이블)
  * - 조회하려는 데이터가 실제 테이블에 존재하는 데이터가 아닌 경우 사용
  *  */
@@ -127,8 +127,8 @@ FROM DUAL;
 /* 날짜 끼리 연산하기 ( - 만 가능 )*/
 -- 연산 결과는 일 단위
 
--- TO_DATE('잘짜문자열', '패턴');
--- -> 잘자 묹열을 패턴 형식으로 해석하여 DATE 타입으로 변환하는 함수
+-- TO_DATE('날짜문자열', '패턴');
+-- -> 날짜 문자열을 패턴 형식으로 해석하여 DATE 타입으로 변환하는 함수
 
 SELECT '2024-08-15',
 	TO_DATE('2024-08-15','YYYY-MM-DD')

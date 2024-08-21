@@ -772,7 +772,7 @@ FROM EMPLOYEE "MAIN"
 LEFT JOIN DEPARTMENT ON(DEPT_ID = DEPT_CODE)
 
 WHERE EXISTS(	-- EXISTS: 서브쿼리 조회결과가 있으면 TRUE == 해당행을 조회(결과에 포함)
-		SELECT '아무글자, 값을 써도 EXISTS는 결과값이 있는지, 없는지만 확인함'
+		SELECT '아무글자, 값을 써도 EXISTS는 "결과값"이 있는지, 없는지만 확인함.'
 		FROM EMPLOYEE "SUB"
 		WHERE "SUB".EMP_ID = "MAIN".MANAGER_ID
 );
@@ -787,12 +787,68 @@ WHERE EXISTS(	-- EXISTS: 서브쿼리 조회결과가 있으면 TRUE == 해당�
 
 -- 각 직원들이 속한 직급의 급여 평균 조회
 
+-- 6-1-1) 각 직급별 급여평균 조회
+SELECT
+	JOB_CODE,
+	AVG(SALARY)
+FROM EMPLOYEE
+GROUP BY JOB_CODE
+ORDER BY JOB_CODE ASC;
+
+-- 6-1-2) 각 직원의 이름, 직급코드 조회
+SELECT
+	EMP_NAME,
+	JOB_CODE
+FROM EMPLOYEE
+ORDER BY EMP_ID ASC;
+
+-- 6-1-3) 각 직원의 이름, 직급코드, '직급별 급여평균' 조회
+SELECT
+		EMP_NAME,
+		JOB_CODE,
+		(SELECT	AVG(SALARY)
+		 FROM EMPLOYEE "SUB"
+		 WHERE "SUB".JOB_CODE = "MAIN".JOB_CODE
+		) AS "직급별 급여 평균"
+FROM
+		EMPLOYEE "MAIN"
+ORDER BY
+		EMP_ID ASC;
 
 
 -- 모든 사원의 사번, 이름, 관리자사번, 관리자명을 조회
 -- 단 관리자가 없는 경우 '없음'으로 표시
 -- (스칼라 + 상관 쿼리)
 
+-- 6-2-1) 모든 사원의 사번, 이름, 관리자사번 조회
+SELECT
+		EMP_ID,
+		EMP_NAME,
+		MANAGER_ID
+FROM
+		EMPLOYEE;
+
+-- 6-2-2) 대략 (실행 x)
+SELECT
+		EMP_ID,
+		EMP_NAME,
+		MANAGER_ID,
+		NVL( (서브쿼리) , '없음') AS "관리자명"
+FROM
+		EMPLOYEE;
+
+-- 6-2-3) 짜잔
+SELECT
+		EMP_ID,
+		EMP_NAME,
+		MANAGER_ID,
+		NVL( (
+					 SELECT EMP_NAME
+					 FROM EMPLOYEE "SUB"
+					 WHERE "SUB".EMP_ID = "MAIN".MANAGER_ID
+		) , '없음') AS "관리자명"
+FROM
+		EMPLOYEE "MAIN";
 
 
 
@@ -800,7 +856,12 @@ WHERE EXISTS(	-- EXISTS: 서브쿼리 조회결과가 있으면 TRUE == 해당�
 -----------------------------------------------------------------------
 
 
--- 7. 인라인 뷰(INLINE-VIEW)
+-- 7. 인라인 뷰(INLINE-VIEW) -->SELECT문에서(절x) 조회되는 가상 테이블
+	
+/* VIEW (객체) : 조회 용도의 가상 테이블
+ * 	-> SELECT는 가능 하지만 INSERT, UPDATE, DELETE는 불가함
+ */	
+	
 --    FROM 절에서 서브쿼리를 사용하는 경우로
 --    서브쿼리가 만든 결과의 집합(RESULT SET)을 테이블 대신에 사용한다.
 
@@ -808,12 +869,82 @@ WHERE EXISTS(	-- EXISTS: 서브쿼리 조회결과가 있으면 TRUE == 해당�
 -- 전 직원 중 급여가 높은 상위 5명의
 -- 순위, 이름, 급여 조회
 
+-- 7-1-1) 전 직원의 급여를 내림차순으로 조회
+SELECT
+	EMP_NAME,
+	SALARY
+FROM EMPLOYEE
+ORDER BY SALARY DESC;
+		--> 선동일, 송중기, 노옹철, 전지연, 정중하 5명 조회할거임
 
+-- 7-1-2) ROWNUM 이용해서 행에 번호를 추가
+-- ROWNUM : 행 번호를 나타내는 가상의 컬럼
+SELECT
+	ROWNUM,
+	EMP_NAME,
+	SALARY
+FROM EMPLOYEE
+ORDER BY SALARY DESC;
+--> 원하는 방법이 아님	--> EMPLOYEE테이블 순서대로 번호가 매겨짐
+SELECT
+	ROWNUM,
+	EMP_NAME,
+	SALARY
+FROM EMPLOYEE
+WHERE ROWNUM <= 5;
+--> 원하는 방법이 아님	--> EMPLOYEE테이블 위에서 5명만 조회됨
 
+-- 7-1-3) ROWNUM을 이용해서 급여 상위 5인 조회
+SELECT ROWNUM, EMP_NAME, SALARY
+FROM EMPLOYEE
+WHERE ROWNUM <= 5
+ORDER BY SALARY DESC;
+--> 원하는 방법이 아님	--> EMPLOYEE테이블 위에서 5명만 조회됨
+
+/*INLINE-VIEW를 통해 해결*/
+SELECT
+	ROWNUM "순위",
+	EMP_NAME,
+	SALARY
+FROM (
+		SELECT EMP_NAME, SALARY
+		FROM EMPLOYEE
+		ORDER BY SALARY DESC
+		--> 서브쿼리 결과 RESULT SET(23행2열)를 메인쿼리의 테이블로 인식
+)
+WHERE ROWNUM <= 5;
+		--> 정렬되어 넘어온 서브쿼리에서 12345행만 조회
 
 
 -- 급여 평균이 3위 안에 드는 부서의 부서코드와 부서명, 평균급여를 조회
 
+-- 7-2-1) 부서코드와 부서명, 평균급여를 평균급여 내림차순으로 조회
+SELECT
+	NVL(DEPT_CODE, '없음') "부서코드",
+	NVL(DEPT_TITLE, '부서명 없음') "부서명",
+	AVG(SALARY) "급여 평균"
+FROM EMPLOYEE
+LEFT JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+GROUP BY DEPT_CODE, DEPT_TITLE
+ORDER BY "급여 평균" DESC;	-- SELECT절에 쓸 그룹함수(AVG, COUNT, SUM 등)을 제외한 모든 컬럼
+
+-- 7-2-2) 전달받은 INLINE-VIEW에서 상위 3개의 부서 선택
+SELECT
+	ROWNUM "순위",
+	"부서코드",
+	"부서명",
+	FLOOR("급여 평균") "급여평 균"
+FROM (
+		SELECT
+			NVL(DEPT_CODE, '없음') "부서코드",
+			NVL(DEPT_TITLE, '부서명 없음') "부서명",
+			AVG(SALARY) "급여 평균"
+		FROM EMPLOYEE
+		LEFT JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+		GROUP BY DEPT_CODE, DEPT_TITLE
+		ORDER BY "급여 평균" DESC
+)
+WHERE ROWNUM <= 3;
 
 ------------------------------------------------------------------------
 
@@ -825,6 +956,51 @@ WHERE EXISTS(	-- EXISTS: 서브쿼리 조회결과가 있으면 TRUE == 해당�
 -- 
 -- 전 직원의 급여 순위 
 -- 순위, 이름, 급여 조회
+-- 단, 10위 까지만 조회
+
+-- 8-1) 전 직원의 급여
+SELECT
+	EMP_NAME,
+	SALARY
+FROM EMPLOYEE
+ORDER BY SALARY DESC;
+
+-- 8-2) 전 직원의 급여 순위 TOP 10
+-- 8-2-1) FROM 절에 서브쿼리를 그대로 작성한 형태
+SELECT
+	ROWNUM "순위",
+	EMP_NAME "이름",
+	SALARY "급여"
+FROM (
+		SELECT
+			EMP_NAME,
+			SALARY
+		FROM EMPLOYEE
+		ORDER BY SALARY DESC
+)
+WHERE ROWNUM <= 10;
+
+-- 8-2-2) WITH 이용하기 (10~20% 빨라진다고 함)
+WITH TOP_SALARY -- 서브쿼리 이름 지정
+AS (	-- 저장할 서브쿼리
+		SELECT
+			EMP_NAME,
+			SALARY
+		FROM EMPLOYEE
+		ORDER BY SALARY DESC
+)
+
+SELECT
+	ROWNUM "순위",
+	EMP_NAME "이름",
+	SALARY "급여"
+FROM TOP_SALARY
+WHERE ROWNUM <= 10;
+
+-- 8-3) 전 직원의 급여 5위 ~ 10위
+-- 제일밑에있음
+
+
 
 --------------------------------------------------------------------------
 
@@ -838,6 +1014,110 @@ WHERE EXISTS(	-- EXISTS: 서브쿼리 조회결과가 있으면 TRUE == 해당�
 
 -- DENSE_RANK() OVER : 동일한 순위 이후의 등수를 이후의 순위로 계산
 --                     EX) 공동 1위가 2명이어도 다음 순위는 2위
+
+
+-- 급여를 많이 받는 순서대로 조회
+
+-- 1) RANK() OVER
+--			OVER() 괄호에 작성된 정렬 기준대로 정렬 후 순위 지정
+--			단, 값의 크기가 같다면 공동 순위 지정, 지정된 만큼 순위 건너뛰기
+SELECT
+		RANK() OVER(ORDER BY SALARY DESC) "순위",
+		--> SALARY 내림차순으로 정렬하고 순위를 지정함
+		EMP_NAME,
+		SALARY
+FROM EMPLOYEE;
+
+
+-- 2) DENSE_RANK() OVER
+SELECT
+		DENSE_RANK() OVER(ORDER BY SALARY DESC) "순위",
+		--> SALARY 내림차순으로 정렬하고 순위를 지정함
+		EMP_NAME,
+		SALARY
+FROM EMPLOYEE;
+
+
+--------------------------------------------------------------------------
+
+/* ROWNUM 사용시 주의사항 */
+-- ROWNUM이 WHERE 절에 사용되는 경우
+-- 항상 범위에 1부터 연속적인 범위가 포함되어야 한다!!!
+-- ROWNUM 은 RESULT SET 완성 후 적용되는 가상 컬럼이라서
+-- 정해진 규칙(1부터 1씩증가)을 만족하지 못하면 사용 불가
+
+-- 급여순위 3 ~7등 조회
+SELECT
+	RANK() OVER (ORDER BY SALARY DESC) "순위",
+	EMP_NAME,
+	SALARY
+FROM EMPLOYEE;
+-- 여기서 노옹철 ~ 심봉선 5명 조회
+
+-- 예시1)
+SELECT
+	"순위",
+	EMP_NAME,
+	SALARY
+FROM (
+		SELECT
+			RANK() OVER (ORDER BY SALARY DESC) "순위",
+			EMP_NAME,
+			SALARY
+		FROM EMPLOYEE
+)
+WHERE ROWNUM <=7;
+
+
+-- 예시2) *** 안됨 ***
+SELECT
+	"순위",
+	EMP_NAME,
+	SALARY
+FROM (
+		SELECT
+			RANK() OVER (ORDER BY SALARY DESC) "순위",
+			EMP_NAME,
+			SALARY
+		FROM EMPLOYEE
+)
+WHERE ROWNUM BETWEEN 3 AND 7;
+
+
+-- 예시3) *** 이건 됨 ***
+SELECT
+	"순위",
+	EMP_NAME,
+	SALARY
+FROM (
+		SELECT
+			RANK() OVER (ORDER BY SALARY DESC) "순위",
+			EMP_NAME,
+			SALARY
+		FROM EMPLOYEE
+)
+WHERE ROWNUM BETWEEN 1 AND 7;
+
+
+/*********** 해결방법 *************/
+-- INLINE-VIEW 중첩사용
+SELECT
+	"순위",
+	EMP_NAME,
+	SALARY
+FROM (
+		SELECT
+			RANK() OVER (ORDER BY SALARY DESC) "순위",
+			EMP_NAME,
+			SALARY
+		FROM EMPLOYEE
+)
+WHERE "순위" BETWEEN 3 AND 7;
+-- ROWNUM 안쓰면됨
+
+
+
+
 
 
 

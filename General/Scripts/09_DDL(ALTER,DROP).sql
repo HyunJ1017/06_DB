@@ -60,6 +60,7 @@ MODIFY DEPT_TITLE NOT NULL; -- NULL 허용 X
 
 ALTER TABLE DEPT_COPY
 MODIFY DEPT_TITLE NULL; -- NULL 허용
+		--	NULL 허용은 CONSTAINTS 화면에 표시되지 않음
 
 
 
@@ -171,7 +172,6 @@ DROP COLUMN LNAME;
 
 SELECT * FROM DEPT_COPY;
 
-
 -- DEPT_COPY의 모든 컬럼 삭제
 ALTER TABLE DEPT_COPY
 DROP COLUMN LOCATION_ID;
@@ -254,7 +254,7 @@ CREATE TABLE TB1(
 	TB1_COL NUMBER
 );
 
--- TB2 테이블 생성(TB1과 관계 설정(FK))
+-- TB2 테이블 생성(TB1과 관계 설정(FK : FOREIGN KEY, 컬럼레벨이어서 FK 직접 안적고 REFERENCES만 적은 것))
 CREATE TABLE TB2(
 	TB2_PK NUMBER PRIMARY KEY,
 	TB2_COL NUMBER
@@ -278,8 +278,9 @@ DROP TABLE TB1 CASCADE CONSTRAINTS;
 -- TB1 테이블 삭제
 
 --   + TB2 FK 제약 조건도 같이 삭제됨!
+--		TB2 에 있는 제약조건(CONSTRAINTS)은 PK만 남아있는걸 확인할 수 있음
 
-
+-- DROP TABLE TB2; -- 지저분해서 삭제
 ---------------------------------------------------------------------------------
 
 -- 4. 컬럼, 제약조건, 테이블 이름 변경(RENAME)
@@ -317,3 +318,4 @@ SELECT * FROM DEPT_COPY;
 
 
 SELECT * FROM DCOPY; -- 변경 확인
+DROP TABLE DCOPY;

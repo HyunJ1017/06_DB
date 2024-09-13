@@ -52,11 +52,32 @@ COMMENT ON COLUMN "MEMBER"."AUTHORITY" 				IS '접근 권한(1:일반, 2:관리�
 -- 시퀀스
 CREATE SEQUENCE SEQ_MEMBER_NO NOCACHE;
 
+/**************************************************************************/
+
 /** 셈플데이터 */
 INSERT INTO "MEMBER"
 VALUES(SEQ_MEMBER_NO.NEXTVAL, 'member01@kh.or.kr', 'pass01!',
 	  '샘플1', '01012341234', NULL, NULL,
 	   DEFAULT, DEFAULT, DEFAULT);
+	  
+INSERT INTO "MEMBER"
+VALUES(
+	SEQ_MEMBER_NO.NEXTVAL, 
+	'member02@kh.or.kr', 
+	'$2a$10$KzFKEvO4C65xBTetZDV8QufZvhQnIGU0SE5ZEaZo0T9SrdYS5oFMC',
+	 '샘플2', 
+	 '01022222222', 
+	 NULL, NULL, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO "MEMBER"
+VALUES(
+	SEQ_MEMBER_NO.NEXTVAL, 
+	'member03@kh.or.kr', 
+	'$2a$10$KzFKEvO4C65xBTetZDV8QufZvhQnIGU0SE5ZEaZo0T9SrdYS5oFMC',
+	 '샘플3', 
+	 '01033333333', 
+	 NULL, NULL, DEFAULT, DEFAULT, DEFAULT);
+
 COMMIT;
 
 
@@ -70,3 +91,18 @@ WHERE MEMBER_NO = 1;
 COMMIT;
 
 SELECT * FROM "MEMBER";
+
+-- 회원정보 수정
+
+--UPDATE "MEMBER"
+--SET
+--	MEMBER_NICKNAME = ?,
+--	MEMBER_TEL = ?,
+--	MEMBER_ADDRESS ?
+--WHERE MEMBER_NO = ?;
+
+UPDATE "MEMBER"
+SET
+	PROFILE_IMG = '/images/user03.jpg'
+WHERE MEMBER_NO = 3;
+

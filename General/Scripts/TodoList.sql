@@ -47,7 +47,7 @@ SET COLOR = '#000000';
 
 ----------------------------------------------------------------
 
--- TODOLIST 테이블 생성
+-- SUBJECTLIST 테이블 생성
 CREATE TABLE SUBJECTLIST(
 		SUBJECT_NO NUMBER CONSTRAINT SUBJECT_NO_PK PRIMARY KEY,
 		LIST_NO NUMBER,

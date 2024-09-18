@@ -39,10 +39,11 @@ ALTER TABLE TODOLIST
 ADD(COLOR VARCHAR2(18));
 
 ALTER TABLE TODOLIST
-MODIFY COLOR DEFAULT '#000000';
+MODIFY COLOR DEFAULT '#ffffff';
 
 UPDATE TODOLIST
-SET COLOR = '#000000';
+SET COLOR = '#ffffff'
+WHERE COLOR = '#000000';
 
 
 ----------------------------------------------------------------

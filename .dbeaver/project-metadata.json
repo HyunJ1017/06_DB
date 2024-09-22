@@ -1,1 +1,1 @@
-{"resources":{"General/Scripts/00_사용자계정생성.sql":{"default-datasource":"oracle_thin-19178585e5f-606d8bc76af2b61c","default-schema":"KH_COMMON"},"Scripts/Script.sql":{"default-datasource":"oracle_thin-1917854ada7-5d884c93aecf8480"}}}
+{"resources":{"General/Scripts/00_사용자계정생성.sql":{"default-schema":"KH_COMMON","default-datasource":"oracle_thin-19178585e5f-606d8bc76af2b61c"},"Scripts/Script.sql":{"default-datasource":"oracle_thin-1917854ada7-5d884c93aecf8480"},"Scripts/chatScript.sql":{"default-datasource":"oracle_thin-19178585e5f-606d8bc76af2b61c","default-schema":"KH_COMMON"}}}

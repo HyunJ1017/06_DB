@@ -106,3 +106,6 @@ SET
 	PROFILE_IMG = '/images/user03.jpg'
 WHERE MEMBER_NO = 3;
 
+-- 회원탈퇴 복구
+UPDATE "MEMBER"
+SET	MEMBER_DEL_FL = 'N';

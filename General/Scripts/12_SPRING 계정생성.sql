@@ -94,18 +94,19 @@ SELECT * FROM "MEMBER";
 
 -- 회원정보 수정
 
---UPDATE "MEMBER"
---SET
---	MEMBER_NICKNAME = ?,
---	MEMBER_TEL = ?,
---	MEMBER_ADDRESS ?
---WHERE MEMBER_NO = ?;
-
 UPDATE "MEMBER"
 SET
-	PROFILE_IMG = '/images/user03.jpg'
-WHERE MEMBER_NO = 3;
+	MEMBER_PW = '$2a$10$dAxz8HaQZxt2YbtvRlaDyeXxD0xsVcjd5l6HazZZt3b/zIKotCuFK',
+	MEMBER_NICKNAME = '지레프'
+WHERE MEMBER_NO = 4;
+
+-- 프로필이지미지정
+UPDATE "MEMBER"
+SET
+	PROFILE_IMG = '/images/member05-flaticon.png'
+WHERE MEMBER_NO = 7;
 
 -- 회원탈퇴 복구
 UPDATE "MEMBER"
 SET	MEMBER_DEL_FL = 'N';
+

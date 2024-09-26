@@ -112,3 +112,26 @@ WHERE MEMBER_NO = 7;
 UPDATE "MEMBER"
 SET	MEMBER_DEL_FL = 'N';
 
+-- 탈퇴여부 변경
+UPDATE "MEMBER"
+SET MEMBER_DEL_FL = DECODE(MEMBER_DEL_FL, 'Y', 'N', 'Y')
+WHERE MEMBER_NO = 1;
+
+---------------------------------------------------------------------
+
+-- 파일 업로드 테스트용 테이블 입니다.
+
+CREATE TABLE TB_FILE_TEST(
+	FILE_NO            NUMBER PRIMARY KEY,
+	FILE_ORIGINAL_NAME VARCHAR2(300), -- 원본 파일명
+	FILE_RENAME        VARCHAR2(300), -- 변경된 파일명
+	FILE_PATH          VARCHAR2(300), -- 파일이 저장된 폴더명
+	UPLOAD_DATE DATE DEFAULT CURRENT_DATE
+);
+
+CREATE SEQUENCE SEQ_FILE_NO NOCACHE;
+
+COMMIT;
+
+UPDATE TB_FILE_TEST
+SET FILE_PATH = '/images/test/';

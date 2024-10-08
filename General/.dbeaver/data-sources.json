@@ -102,7 +102,7 @@
 				{
 					"type": "org.jkiss.dbeaver.ext.oracle.model.OracleSchema",
 					"enabled": true,
-					"include": ["TEST_USER"]
+					"include": ["DAEMOIM"]
 				}
 			]
 		},

@@ -21,6 +21,34 @@
 				},
 				"auth-model": "oracle_native"
 			}
+		},
+		"oracle_thin-19259e6dc6f-46589a8cc0907a04": {
+			"provider": "oracle",
+			"driver": "oracle_thin",
+			"name": "KH_PHJ1234",
+			"save-password": true,
+			"configuration": {
+				"host": "192.168.219.104",
+				"port": "1521",
+				"database": "XE",
+				"url": "jdbc:oracle:thin:@//192.168.219.104:1521/XE",
+				"configurationType": "MANUAL",
+				"home": "C:\\tools\\2_oracle\\dbhomeXE",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"provider-properties": {
+					"@dbeaver-connection-type@": "BASIC",
+					"@dbeaver-sid-service@": "SERVICE"
+				},
+				"auth-model": "oracle_native"
+			},
+			"filters": [
+				{
+					"type": "org.jkiss.dbeaver.ext.oracle.model.OracleSchema",
+					"enabled": true,
+					"include": ["KH_PHJ"]
+				}
+			]
 		}
 	},
 	"connection-types": {
@@ -28,7 +56,7 @@
 			"name": "Development",
 			"color": "255,255,255",
 			"description": "Regular development database",
-			"auto-commit": false,
+			"auto-commit": true,
 			"confirm-execute": false,
 			"confirm-data-change": false,
 			"smart-commit": false,

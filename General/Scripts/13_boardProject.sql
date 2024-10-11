@@ -559,3 +559,8 @@ INSERT INTO "BOARD_IMG"
 
 ROLLBACK;
 
+
+----------------------------
+UPDATE "BOARD"
+SET BOARD_DEL_FL = 'N'
+WHERE BOARD_NO = 2020;

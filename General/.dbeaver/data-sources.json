@@ -81,7 +81,7 @@
 		"oracle_thin-19169c38580-48e7034f7ea27913": {
 			"provider": "oracle",
 			"driver": "oracle_thin",
-			"name": "khj-1.xyz",
+			"name": "deamoim1234",
 			"save-password": true,
 			"configuration": {
 				"host": "khj-1.xyz",
@@ -102,7 +102,7 @@
 				{
 					"type": "org.jkiss.dbeaver.ext.oracle.model.OracleSchema",
 					"enabled": true,
-					"include": ["TEST_USER"]
+					"include": ["DAEMOIM"]
 				}
 			]
 		},

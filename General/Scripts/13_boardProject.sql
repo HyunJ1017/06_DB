@@ -564,3 +564,28 @@ ROLLBACK;
 UPDATE "BOARD"
 SET BOARD_DEL_FL = 'N'
 WHERE BOARD_NO = 2020;
+
+----------------------------
+-- 검색 조건이 일치하는 글 조회
+SELECT COUNT(*)
+FROM "BOARD"
+ JOIN "MEMBER" USING( "MEMBER_NO" )
+WHERE BOARD_CODE = 1
+AND BOARD_DEL_FL = 'N'
+
+-- 제목 검색인 경우
+--AND BOARD_TITLE LIKE '%11%';
+
+-- 내용 검색인 경우
+--AND BOARD_CONTENT LIKE '%11%';
+
+-- 제목 또는 내용 검색
+--AND (BOARD_TITLE LIKE '%' || '11' || '%'
+--	 OR  BOARD_CONTENT LIKE '%' || '11' || '%');
+
+-- 작성자 검색
+AND MEMBER_NICKNAME = '다이노';
+
+----------------------------
+
+

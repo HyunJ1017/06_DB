@@ -668,3 +668,19 @@ WHERE RECEIVE_MEMBER_NO = 1
 ORDER BY NOTIFICATION_NO DESC;
 
 
+---------------------------------------------
+/* DB에 저장되어 있는 파일명 모두 조회 */
+
+-- SUBSTR(컬럼명, 시작 인덱스) : 인덱스 부터 끝까지 잘라서 반환
+-- INSTR(컬럼명, '찾을 문자열', 검색순서) : 일치하는 문자열 인덱스 반환
+--   검색순서 -1 : 뒤에서부터검색
+-- TO_CHAR : DB에 테이블 만들때 컬럼 데이터자료형이 달라저 맞춰주려고 사용
+SELECT SUBSTR(PROFILE_IMG, INSTR(PROFILE_IMG, '/', -1) + 1 ) AS "FILE_NAME" FROM "MEMBER"
+UNION
+SELECT TO_CHAR(IMG_RENAME) AS "FILE_NAME" FROM BOARD_IMG;
+
+
+
+
+
+
